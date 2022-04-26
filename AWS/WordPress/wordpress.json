@@ -1,0 +1,40 @@
+{
+    "variables": {
+      "access_key": "{{env `ACCESS_KEY`}}",
+      "secret_key": "{{env `SECRET_KEY`}}"
+    },
+
+"sensitive-variables": ["access_key", "secret_key"],
+"builders": [
+  {
+    "type": "amazon-ebs",
+    "access_key": "{{user `access_key`}}",
+    "secret_key": "{{user `secret_key`}}",
+    "region": "ap-south-1",
+    "ami_name": "Rahul-Packer-WordPress-v1",
+    "source_ami": "ami-0851b76e8b1bce90b",
+    "instance_type": "t3a.small",
+    "ssh_username": "ubuntu"
+  }
+],
+"provisioners": [
+  {
+    "type": "shell",
+    "script": "config1.sh"
+  },
+  {
+    "type": "file",
+    "source": "wordpress-nginx-conf",
+    "destination": "/tmp/"
+  },{
+    "type": "shell",
+    "script": "config2.sh"
+  }
+],
+"post-processors": [
+  {
+    "type": "manifest",
+    "output": "output.json"
+  }
+]
+}
